@@ -12,7 +12,7 @@ void main(List<String> arguments) {
     final e = "e";
     final f = "f";
 
-    // include an non directed edge
+    // helper function to add an non directed edge
     void edge(a, b, double weight) {
       g.addEdge(a, b, weight);
       g.addEdge(b, a, weight);
@@ -114,12 +114,21 @@ class Graph<T> {
 
     // initialize distance vector
     for (var indexTo = 0; indexTo < nodes.length; indexTo++) {
-      d.add(cost[indexFrom][indexTo]);
-      p.add(null);
+      // cost to arrive at this node
+      var c = cost[indexFrom][indexTo];
+      d.add(c);
+      // if node a direct neighbour of `from`
+      if (c.isFinite) {
+        p.add(indexFrom);
+      } else {
+        p.add(null);
+      }
     }
 
     // repeate until shortest path to all nodes is known
     while (M.length != nodes.length) {
+      // yield intermediate result
+      yield PathInfo(M, d, p, nodes);
       // find minimal d(j)
       int j = _findMinimal(d, M);
       M.add(j);
@@ -137,9 +146,10 @@ class Graph<T> {
           p[k] = j;
         }
       }
-
-      yield PathInfo(M, d, p, nodes);
     }
+
+    // yield final result
+    yield PathInfo(M, d, p, nodes);
   }
 
   int _findMinimal(List<double> d, Set<int> m) {
