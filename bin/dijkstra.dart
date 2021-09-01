@@ -1,8 +1,55 @@
 import 'dart:math';
 
 void main(List<String> arguments) {
-  var nodes = <String>["a", "b", "c", "d", "e"];
-  print('Hello world!');
+  var nodes = <String>["a", "b", "c", "d", "e", "f"];
+  var g = Graph(nodes);
+  var source = 'a';
+  { 
+    final a = "a";
+    final b = "b";
+    final c = "c";
+    final d = "d";
+    final e = "e";
+    final f = "f";
+
+    // include an non directed edge
+    void edge(a, b, weight) {
+      g.addEdge(a, b, weight);
+      g.addEdge(b, a, weight);
+    }
+
+    edge(a, b, 2);
+    edge(a, c, 1);
+    edge(b, d, 2);
+    edge(b, e, 3);
+    edge(c, d, 2);
+    edge(c, f, 4);
+    edge(d, e, 1);
+    edge(d, f, 1);
+    edge(e, f, 2);
+  }
+  
+  // now print a nice csv document, separated with ; (because excel is bad with ,)
+  print("M;" + nodes.map((n) => "d($n);p($n)").join(";"));
+
+  for (var info in g.shortestPath(source)) {
+    // line in csv; format
+    var line = info.M.join(" ") + ";";
+    
+    line += () sync* {
+      for (var node in nodes) {
+      var d = info.d[node];
+      var valueForD = d.toString();
+      if (d!.isInfinite) {
+        valueForD = "∞";
+      }
+      var p = info.p[node]?.toString() ?? "-";
+
+      yield "$valueForD;$p";
+    }}().join(";") + "\n";
+
+    print(line);
+  }
 }
 
 class Graph<T> {
