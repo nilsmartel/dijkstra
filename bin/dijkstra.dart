@@ -13,7 +13,7 @@ void main(List<String> arguments) {
     final f = "f";
 
     // include an non directed edge
-    void edge(a, b, weight) {
+    void edge(a, b, double weight) {
       g.addEdge(a, b, weight);
       g.addEdge(b, a, weight);
     }
@@ -37,19 +37,18 @@ void main(List<String> arguments) {
     var line = info.M.join(" ") + ";";
 
     line += () sync* {
-          for (var node in nodes) {
-            var d = info.d[node];
-            var valueForD = d.toString();
-            if (d!.isInfinite) {
-              valueForD = "∞";
-            }
-            var p = info.p[node]?.toString() ?? "-";
+      for (var node in nodes) {
+        var d = info.d[node];
+        var valueForD = d.toString();
+        if (d!.isInfinite) {
+          valueForD = "∞";
+        }
+        var p = info.p[node]?.toString() ?? "-";
 
-            yield "$valueForD;$p";
-          }
-        }()
-            .join(";") +
-        "\n";
+        yield "$valueForD;$p";
+      }
+    }()
+        .join(";");
 
     print(line);
   }
