@@ -1,8 +1,17 @@
 void main(List<String> arguments) {
+  // Write list of nodes of graph here
   var nodes = <String>["a", "b", "c", "d", "e", "f"];
   var graph = Graph(nodes);
+
+  // Edit this
   var source = 'a';
   {
+    // helper function to add an non directed edge
+    void edge(node1, node2, double weight) {
+      graph.addEdge(node1, node2, weight);
+      graph.addEdge(node2, node1, weight);
+    }
+
     final a = "a";
     final b = "b";
     final c = "c";
@@ -10,11 +19,7 @@ void main(List<String> arguments) {
     final e = "e";
     final f = "f";
 
-    // helper function to add an non directed edge
-    void edge(a, b, double weight) {
-      graph.addEdge(a, b, weight);
-      graph.addEdge(b, a, weight);
-    }
+    // include all edges here
 
     edge(a, b, 2);
     edge(a, c, 1);
