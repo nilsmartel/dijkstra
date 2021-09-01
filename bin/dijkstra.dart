@@ -4,7 +4,7 @@ void main(List<String> arguments) {
   var nodes = <String>["a", "b", "c", "d", "e", "f"];
   var g = Graph(nodes);
   var source = 'a';
-  { 
+  {
     final a = "a";
     final b = "b";
     final c = "c";
@@ -28,25 +28,28 @@ void main(List<String> arguments) {
     edge(d, f, 1);
     edge(e, f, 2);
   }
-  
+
   // now print a nice csv document, separated with ; (because excel is bad with ,)
   print("M;" + nodes.map((n) => "d($n);p($n)").join(";"));
 
   for (var info in g.shortestPath(source)) {
     // line in csv; format
     var line = info.M.join(" ") + ";";
-    
-    line += () sync* {
-      for (var node in nodes) {
-      var d = info.d[node];
-      var valueForD = d.toString();
-      if (d!.isInfinite) {
-        valueForD = "∞";
-      }
-      var p = info.p[node]?.toString() ?? "-";
 
-      yield "$valueForD;$p";
-    }}().join(";") + "\n";
+    line += () sync* {
+          for (var node in nodes) {
+            var d = info.d[node];
+            var valueForD = d.toString();
+            if (d!.isInfinite) {
+              valueForD = "∞";
+            }
+            var p = info.p[node]?.toString() ?? "-";
+
+            yield "$valueForD;$p";
+          }
+        }()
+            .join(";") +
+        "\n";
 
     print(line);
   }
@@ -73,13 +76,13 @@ class Graph<T> {
   }
 
   int _getIndex(T node) {
-      final index = nodeIndex[node];
+    final index = nodeIndex[node];
 
-      if (index == null) {
-        throw ("node must be part of the graph")
-      }
+    if (index == null) {
+      throw ("node must be part of the graph");
+    }
 
-      return index;
+    return index;
   }
 
   void addEdge(T from, T to, double weight) {
@@ -110,23 +113,24 @@ class Graph<T> {
       p.add(null);
     }
 
-
-    // repeate until shortest path to all nodes is known 
+    // repeate until shortest path to all nodes is known
     while (M.length != nodes.length) {
       // find minimal d(j)
       int j = _findMinimal(d, M);
       M.add(j);
 
       // for all nodes not in M
-      for (var k = 0; k < nodes.length; k++) { 
-          if (M.contains(k)) { continue; }
+      for (var k = 0; k < nodes.length; k++) {
+        if (M.contains(k)) {
+          continue;
+        }
 
-          var neighbourCost = d[j] + cost[j][k];
+        var neighbourCost = d[j] + cost[j][k];
 
-          if (d[k] > neighbourCost) {
-            d[k] = neighbourCost;
-            p[k] = j;
-          }
+        if (d[k] > neighbourCost) {
+          d[k] = neighbourCost;
+          p[k] = j;
+        }
       }
 
       yield PathInfo(M, d, p, nodes);
@@ -137,11 +141,13 @@ class Graph<T> {
     double? minValue;
     int? minIndex;
 
-    for (int index = 0; index< d.length; index ++) {
+    for (int index = 0; index < d.length; index++) {
       // skip all nodes already in set m
-      if (m.contains(index)) { continue; }
+      if (m.contains(index)) {
+        continue;
+      }
 
-      // set index to index of minimal element 
+      // set index to index of minimal element
       if (minValue == null || d[index] < minValue) {
         minValue = d[index];
         minIndex = index;
@@ -149,7 +155,7 @@ class Graph<T> {
     }
 
     if (minIndex == null) {
-      throw("no suitable node in set");
+      throw ("no suitable node in set");
     }
 
     return minIndex;
@@ -165,12 +171,12 @@ class PathInfo<T> {
   Map<T, T?> p = {};
 
   PathInfo(Set<int> mId, List<double> dId, List<int?> pId, List<T> nodes) {
-    for (int i=0; i < nodes.length; i++) {
+    for (int i = 0; i < nodes.length; i++) {
       final node = nodes[i];
       if (mId.contains(i)) M.add(node);
 
       d[node] = dId[i];
-      
+
       var predId = pId[i];
       if (predId != null) {
         p[node] = nodes[predId];
