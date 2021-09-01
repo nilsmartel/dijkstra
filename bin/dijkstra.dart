@@ -38,6 +38,10 @@ void main(List<String> arguments) {
 
     line += () sync* {
       for (var node in nodes) {
+        if (node == source) {
+          continue;
+        }
+
         var d = info.d[node];
         var valueForD = d.toString();
         if (d!.isInfinite) {
