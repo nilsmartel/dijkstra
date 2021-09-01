@@ -1,6 +1,6 @@
 void main(List<String> arguments) {
   var nodes = <String>["a", "b", "c", "d", "e", "f"];
-  var g = Graph(nodes);
+  var graph = Graph(nodes);
   var source = 'a';
   {
     final a = "a";
@@ -12,8 +12,8 @@ void main(List<String> arguments) {
 
     // helper function to add an non directed edge
     void edge(a, b, double weight) {
-      g.addEdge(a, b, weight);
-      g.addEdge(b, a, weight);
+      graph.addEdge(a, b, weight);
+      graph.addEdge(b, a, weight);
     }
 
     edge(a, b, 2);
@@ -32,7 +32,7 @@ void main(List<String> arguments) {
   print("M;" +
       nodes.where((n) => n != source).map((n) => "d($n);p($n)").join(";"));
 
-  for (var info in g.shortestPath(source)) {
+  for (var info in graph.shortestPath(source)) {
     // line in csv; format
     var line = info.M.join(" ") + ";";
 
