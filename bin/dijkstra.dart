@@ -1,5 +1,3 @@
-import 'dart:math';
-
 void main(List<String> arguments) {
   var nodes = <String>["a", "b", "c", "d", "e", "f"];
   var g = Graph(nodes);
