@@ -1,3 +1,5 @@
+import 'dart:math';
+
 void main(List<String> arguments) {
   var nodes = <String>["a", "b", "c", "d", "e"];
   print('Hello world!');
@@ -41,7 +43,7 @@ class Graph<T> {
   }
 
   // computes cost matrix using dijkstras algorithm
-  void shortestPath(T from) {
+  Iterable<PathInfo> shortestPath(T from) sync* {
     // index of `from` in cost matrix
     final indexFrom = _getIndex(from);
 
@@ -79,6 +81,8 @@ class Graph<T> {
             p[k] = j;
           }
       }
+
+      yield PathInfo(M, d, p, nodes);
     }
   }
 
@@ -102,5 +106,30 @@ class Graph<T> {
     }
 
     return minIndex;
+  }
+}
+
+class PathInfo<T> {
+  // set of nodes with well known path
+  Set<T> M = {};
+  // distance from source
+  Map<T, double> d = {};
+  // predecessors
+  Map<T, T?> p = {};
+
+  PathInfo(Set<int> mId, List<double> dId, List<int?> pId, List<T> nodes) {
+    for (int i=0; i < nodes.length; i++) {
+      final node = nodes[i];
+      if (mId.contains(i)) M.add(node);
+
+      d[node] = dId[i];
+      
+      var predId = pId[i];
+      if (predId != null) {
+        p[node] = nodes[predId];
+      } else {
+        p[node] = null;
+      }
+    }
   }
 }
