@@ -30,7 +30,9 @@ void main(List<String> arguments) {
   }
 
   // now print a nice csv document, separated with ; (because excel is bad with ,)
-  print("M;" + nodes.map((n) => "d($n);p($n)").join(";"));
+  // Note that we dont print the table for the source node
+  print("M;" +
+      nodes.where((n) => n != source).map((n) => "d($n);p($n)").join(";"));
 
   for (var info in g.shortestPath(source)) {
     // line in csv; format
