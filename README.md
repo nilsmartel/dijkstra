@@ -1,6 +1,6 @@
 # Dijkstra
 
-Implementation of dijkstras shortest path algorithm in dart.
+Lovingly commented implementation of dijkstras shortest path algorithm in dart.
 
 
 This is ment as a learning exercise.
