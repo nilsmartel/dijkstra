@@ -1,10 +1,10 @@
 void main(List<String> arguments) {
   // Write list of nodes of graph here
-  var nodes = <String>["a", "b", "c", "d", "e", "f"];
+  var nodes = <String>['S', "A", "B", "C", "D", "E", "F"];
   var graph = Graph(nodes);
 
   // Edit this
-  var source = 'a';
+  var source = 'S';
   {
     // helper function to add an non directed edge
     void edge(node1, node2, double weight) {
@@ -12,24 +12,26 @@ void main(List<String> arguments) {
       graph.addEdge(node2, node1, weight);
     }
 
-    final a = "a";
-    final b = "b";
-    final c = "c";
-    final d = "d";
-    final e = "e";
-    final f = "f";
+    final s = "S";
+    final a = "A";
+    final b = "B";
+    final c = "C";
+    final d = "D";
+    final e = "E";
+    final f = "F";
 
     // include all edges here
 
-    edge(a, b, 2);
-    edge(a, c, 1);
-    edge(b, d, 2);
-    edge(b, e, 3);
-    edge(c, d, 2);
-    edge(c, f, 4);
-    edge(d, e, 1);
-    edge(d, f, 1);
-    edge(e, f, 2);
+    edge(s, a, 7);
+    edge(s, b, 2);
+    edge(s, c, 5);
+    edge(s, d, 4);
+    edge(a, e, 3);
+    edge(b, e, 1);
+    edge(b, f, 3);
+    edge(c, e, 1);
+    edge(c, f, 2);
+    edge(d, f, 2);
   }
 
   // now print a nice csv document, separated with ; (because excel is bad with ,)
@@ -41,23 +43,16 @@ void main(List<String> arguments) {
     // line in csv; format
     var line = info.M.join(" ") + ";";
 
-    line += () sync* {
-      for (var node in nodes) {
-        if (node == source) {
-          continue;
-        }
-
-        var d = info.d[node];
-        var valueForD = d.toString();
-        if (d!.isInfinite) {
-          valueForD = "∞";
-        }
-        var p = info.p[node]?.toString() ?? "-";
-
-        yield "$valueForD;$p";
+    line += nodes.where((n) => n != source).map((node) {
+      var d = info.d[node];
+      var valueForD = d.toString();
+      if (d!.isInfinite) {
+        valueForD = "∞";
       }
-    }()
-        .join(";");
+      var p = info.p[node]?.toString() ?? "-";
+
+      return "$valueForD;$p";
+    }).join(';');
 
     print(line);
   }
